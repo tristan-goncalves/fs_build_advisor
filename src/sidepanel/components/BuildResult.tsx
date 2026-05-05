@@ -26,6 +26,12 @@ export function BuildResult({ result, game }: Props) {
   const { build } = result;
 
   const weaponsById = new Map(game.weapons.map((w) => [w.id, w]));
+  const archetypeLabel =
+    game.archetypes.find((a) => a.id === build.archetype)?.label ?? build.archetype;
+  const targetLevelLabel = game.metaLevelLabel.replace(
+    String(game.metaLevel),
+    String(build.targetLevel),
+  );
 
   const groups: { id: string; tiers: Tier[]; rationales: string[] }[] = [];
   for (const tier of TIER_ORDER) {
@@ -52,7 +58,8 @@ export function BuildResult({ result, game }: Props) {
       <div>
         <h2 className="result-section-title">Allocation de stats</h2>
         <div className="target-level" style={{ marginBottom: 8 }}>
-          Niveau cible : <strong>SL {build.targetLevel}</strong>
+          Niveau cible : <strong>{targetLevelLabel}</strong> · Archétype :{" "}
+          <strong>{archetypeLabel}</strong>
         </div>
         <StatsRadarMount
           stats={build.statAllocation}

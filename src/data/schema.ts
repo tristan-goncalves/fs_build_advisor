@@ -1,17 +1,7 @@
 export type Tier = "early" | "mid" | "late";
 export type AttackRange = "short" | "medium" | "long";
 
-// Stats canoniques de DS3
-export type Stat =
-  | "VIG" // Vigor
-  | "ATT" // Attunement
-  | "END" // Endurance
-  | "VIT" // Vitality
-  | "STR" // Strength
-  | "DEX" // Dexterity
-  | "INT" // Intelligence
-  | "FTH" // Faith
-  | "LCK"; // Luck
+export type Stat = string;
 
 export type ScalingGrade = "S" | "A" | "B" | "C" | "D" | "E" | "-";
 
@@ -20,20 +10,32 @@ export type DamageType =
   | "magic"
   | "fire"
   | "lightning"
-  | "dark";
+  | "dark"
+  | "holy"
+  | "blood"
+  | "arcane";
 
 export interface Weapon {
   id: string;
   name: string;
-  category: string; // "Katana", "Straight Sword", "Greatsword", etc.
+  category: string;
   weight: number;
-  requirements: Partial<Record<Stat, number>>;
-  scaling: Partial<Record<Stat, ScalingGrade>>;
+  requirements: Record<Stat, number>;
+  scaling: Record<Stat, ScalingGrade>;
   damageTypes: DamageType[];
   range: AttackRange;
-  tier: Tier; // moment où le joueur peut typiquement l'obtenir (early, mid ou late game)
+  tier: Tier;
   location: string;
-  notes?: string; // moveset, particularités (saignement, weapon art notable, etc.)
+  notes?: string;
+}
+
+export interface ArchetypeDef {
+  id: string;
+  label: string;
+  mainStat: Stat;
+  protectedStats?: Stat[];
+  baseDistribution: Record<Stat, number>;
+  reduceOrder: Stat[];
 }
 
 export type GameId = "dark-souls-3" | "elden-ring" | "bloodborne";
@@ -42,6 +44,12 @@ export interface Game {
   id: GameId;
   displayName: string;
   stats: Stat[];
-  defaultTargetLevel: number;
+  metaLevel: number;
+  metaLevelLabel: string;
+  metaStatTotal: number;
+  softCaps: Record<Stat, number>;
+  softMins: Record<Stat, number>;
+  archetypes: ArchetypeDef[];
+  tierZones: { early: string; mid: string; late: string };
   weapons: Weapon[];
 }

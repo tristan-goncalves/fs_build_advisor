@@ -8,7 +8,8 @@ export interface WeaponSuggestion {
 export interface BuildRecommendation {
   summary: string;
   targetLevel: number;
-  statAllocation: Partial<Record<Stat, number>>;
+  archetype: string;
+  statAllocation: Record<Stat, number>;
   weapons: Record<Tier, WeaponSuggestion>;
 }
 

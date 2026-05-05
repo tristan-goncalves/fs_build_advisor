@@ -1,5 +1,10 @@
-import type { Game } from "../data/schema";
+import type { ArchetypeDef, Game, Weapon } from "../data/schema";
 import type { BuildRecommendation, GenerateBuildResult } from "../types/build";
+import {
+  computeRequirementFloors,
+  deriveStatAllocation,
+  getArchetype,
+} from "./archetypes";
 import { buildResponseJsonSchema, buildSystemPrompt, buildUserPrompt } from "./prompt";
 import { loadSettings } from "./settings";
 
@@ -168,8 +173,21 @@ export async function generateBuild(
       };
     }
 
+    const archetype = getArchetype(game, parsed.archetype);
+    if (!archetype) {
+      console.error("[ollama] archétype inconnu :", parsed.archetype);
+      return {
+        ok: false,
+        error: `L'IA a renvoyé un archétype inconnu : "${parsed.archetype}".`,
+        rawText,
+        modelUsed: model,
+      };
+    }
+
+    const enriched = enrichBuildWithStats(parsed, archetype, game);
+
     console.info("[ollama] build généré avec succès");
-    return { ok: true, build: parsed, rawText, modelUsed: model };
+    return { ok: true, build: enriched, rawText, modelUsed: model };
   } catch (err) {
     const msg = err instanceof Error ? err.message : String(err);
     console.error("[ollama] erreur réseau /api/generate :", err);
@@ -204,17 +222,38 @@ function explainOllamaHttpError(status: number, body: string): string {
   return `Ollama a répondu avec le statut ${status}.${tail}`;
 }
 
-function parseBuildJson(text: string): BuildRecommendation | null {
+interface RawLlmBuild {
+  summary: string;
+  targetLevel: number;
+  archetype: string;
+  weapons: BuildRecommendation["weapons"];
+}
+
+function parseBuildJson(text: string): RawLlmBuild | null {
   const direct = safeJsonParse(text);
-  if (direct && looksLikeBuild(direct)) return direct as BuildRecommendation;
+  if (direct && looksLikeBuild(direct)) return direct as RawLlmBuild;
 
   const extracted = extractFirstJsonObject(text);
   if (extracted) {
     const parsed = safeJsonParse(extracted);
-    if (parsed && looksLikeBuild(parsed)) return parsed as BuildRecommendation;
+    if (parsed && looksLikeBuild(parsed)) return parsed as RawLlmBuild;
   }
 
   return null;
+}
+
+function enrichBuildWithStats(
+  raw: RawLlmBuild,
+  archetype: ArchetypeDef,
+  game: Game,
+): BuildRecommendation {
+  const weaponsById = new Map(game.weapons.map((w) => [w.id, w]));
+  const chosen: Weapon[] = Object.values(raw.weapons)
+    .map((s) => weaponsById.get(s.id))
+    .filter((w): w is Weapon => Boolean(w));
+  const reqFloors = computeRequirementFloors(chosen);
+  const statAllocation = deriveStatAllocation(game, archetype, raw.targetLevel, reqFloors);
+  return { ...raw, statAllocation };
 }
 
 function safeJsonParse(text: string): unknown {
@@ -263,7 +302,7 @@ function looksLikeBuild(value: unknown): boolean {
   return (
     typeof v.summary === "string" &&
     typeof v.targetLevel === "number" &&
-    typeof v.statAllocation === "object" &&
+    typeof v.archetype === "string" &&
     typeof v.weapons === "object" &&
     v.weapons !== null
   );

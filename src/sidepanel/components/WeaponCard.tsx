@@ -89,5 +89,11 @@ function translateDamage(d: Weapon["damageTypes"][number]): string {
       return "foudre";
     case "dark":
       return "ténèbres";
+    case "holy":
+      return "sacré";
+    case "blood":
+      return "saignement";
+    case "arcane":
+      return "arcane";
   }
 }

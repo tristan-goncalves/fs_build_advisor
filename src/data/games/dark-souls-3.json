@@ -2,7 +2,73 @@
   "id": "dark-souls-3",
   "displayName": "Dark Souls III",
   "stats": ["VIG", "ATT", "END", "VIT", "STR", "DEX", "INT", "FTH", "LCK"],
-  "defaultTargetLevel": 80,
+  "metaLevel": 80,
+  "metaLevelLabel": "SL80",
+  "metaStatTotal": 160,
+  "softCaps": {
+    "VIG": 40, "ATT": 30, "END": 40, "VIT": 40,
+    "STR": 40, "DEX": 40, "INT": 60, "FTH": 60, "LCK": 40
+  },
+  "softMins": {
+    "VIG": 25, "ATT": 10, "END": 20
+  },
+  "tierZones": {
+    "early": "avant Crucifixion Woods / Catacombes",
+    "mid": "avant Lothric Castle / Grand Archives",
+    "late": "fin de partie"
+  },
+  "archetypes": [
+    {
+      "id": "STRENGTH",
+      "label": "Force (armes lourdes, scaling STR)",
+      "mainStat": "STR",
+      "baseDistribution": { "VIG": 30, "ATT": 10, "END": 25, "VIT": 18, "STR": 40, "DEX": 12, "INT": 9, "FTH": 9, "LCK": 7 },
+      "reduceOrder": ["VIT", "DEX", "INT", "FTH", "LCK", "ATT", "END", "VIG", "STR"]
+    },
+    {
+      "id": "DEXTERITY",
+      "label": "Dextérité (katanas, espadons rapides, scaling DEX)",
+      "mainStat": "DEX",
+      "baseDistribution": { "VIG": 30, "ATT": 10, "END": 25, "VIT": 16, "STR": 12, "DEX": 40, "INT": 9, "FTH": 9, "LCK": 9 },
+      "reduceOrder": ["VIT", "STR", "INT", "FTH", "LCK", "ATT", "END", "VIG", "DEX"]
+    },
+    {
+      "id": "QUALITY",
+      "label": "Qualité (hybride STR/DEX)",
+      "mainStat": "STR",
+      "baseDistribution": { "VIG": 27, "ATT": 10, "END": 22, "VIT": 22, "STR": 27, "DEX": 27, "INT": 9, "FTH": 9, "LCK": 7 },
+      "reduceOrder": ["VIT", "INT", "FTH", "LCK", "ATT", "END", "VIG", "STR", "DEX"]
+    },
+    {
+      "id": "INTELLIGENCE",
+      "label": "Intelligence (sorciers, armes Crystal/Magic, scaling INT)",
+      "mainStat": "INT",
+      "baseDistribution": { "VIG": 27, "ATT": 18, "END": 20, "VIT": 11, "STR": 11, "DEX": 12, "INT": 45, "FTH": 9, "LCK": 7 },
+      "reduceOrder": ["VIT", "STR", "DEX", "FTH", "LCK", "ATT", "END", "VIG", "INT"]
+    },
+    {
+      "id": "FAITH",
+      "label": "Foi (miracles, armes Lightning/Blessed/Dark, scaling FTH)",
+      "mainStat": "FTH",
+      "baseDistribution": { "VIG": 27, "ATT": 18, "END": 20, "VIT": 11, "STR": 12, "DEX": 11, "INT": 9, "FTH": 45, "LCK": 7 },
+      "reduceOrder": ["VIT", "STR", "DEX", "INT", "LCK", "ATT", "END", "VIG", "FTH"]
+    },
+    {
+      "id": "PYROMANCY",
+      "label": "Pyromancie (scaling INT + FTH)",
+      "mainStat": "INT",
+      "protectedStats": ["INT", "FTH"],
+      "baseDistribution": { "VIG": 25, "ATT": 15, "END": 20, "VIT": 10, "STR": 11, "DEX": 12, "INT": 30, "FTH": 30, "LCK": 7 },
+      "reduceOrder": ["VIT", "STR", "DEX", "LCK", "ATT", "END", "VIG", "INT", "FTH"]
+    },
+    {
+      "id": "LUCK",
+      "label": "Chance / Saignement (armes Hollow infusées, saignement, scaling LCK)",
+      "mainStat": "LCK",
+      "baseDistribution": { "VIG": 27, "ATT": 10, "END": 22, "VIT": 10, "STR": 11, "DEX": 25, "INT": 9, "FTH": 9, "LCK": 37 },
+      "reduceOrder": ["VIT", "STR", "INT", "FTH", "ATT", "END", "VIG", "DEX", "LCK"]
+    }
+  ],
   "weapons": [
     {
       "id": "uchigatana",
