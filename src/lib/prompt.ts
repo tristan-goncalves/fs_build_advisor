@@ -36,6 +36,11 @@ RÈGLES STRICTES :
 10. PLANCHER DE SURVIE non négociable, peu importe l'archétype : VIG ≥ 25, END ≥ 20. Un personnage avec VIG 10 meurt en deux coups, c'est inutilisable. Ces deux stats consomment une grosse partie du budget — c'est normal.
 11. Soft caps DS3 à respecter (au-delà, le scaling devient dérisoire) : STR 40 (60 en two-handing), DEX 40, INT 60, FTH 60, LCK 40. VIG paliers 27/40. END palier 40. Ne dépasse JAMAIS ces valeurs.
 12. VÉRIFICATION OBLIGATOIRE avant de répondre : calcule mentalement la somme des 9 valeurs ; elle DOIT être dans [targetLevel + 75, targetLevel + 85]. Si elle dépasse, baisse les stats hors archétype au plancher. Si elle est trop basse, monte VIG/END d'abord puis la stat principale.
+13. RESPECT DES TIERS — chaque slot impose un tier d'origine plafond, parce qu'une arme inaccessible avant la fin de partie ne peut pas équiper le joueur en début ou milieu :
+    - "early" : UNIQUEMENT des armes dont \`tier:early\` (accessibles avant Crucifixion Woods / Catacombes).
+    - "mid" : armes dont \`tier:early\` OU \`tier:mid\` (avant Lothric Castle / Grand Archives).
+    - "late" : n'importe quel tier (early, mid ou late).
+    Le schéma JSON applique déjà cette contrainte ; ignorer la règle = réponse rejetée. Choisis donc l'arme cohérente avec le build PARMI les ids autorisés pour le slot.
 
 GRILLE D'ARCHÉTYPES À SL80 (cibles concrètes ; le RESTE reste au plancher 7-12) :
 - STRENGTH (armes lourdes, ultra greatswords, scaling STR) → VIG 27, END 22, VIT 18, STR 40. Somme stats clés ≈ 107.
@@ -97,19 +102,21 @@ function buildOneShotExample(game: Game): string {
 }
 
 export function buildResponseJsonSchema(game: Game): Record<string, unknown> {
-  const validIds = game.weapons.map((w) => w.id);
+  const earlyIds = game.weapons.filter((w) => w.tier === "early").map((w) => w.id);
+  const midIds = game.weapons.filter((w) => w.tier === "early" || w.tier === "mid").map((w) => w.id);
+  const lateIds = game.weapons.map((w) => w.id);
   const statProps = Object.fromEntries(
     game.stats.map((s) => [s, { type: "integer", minimum: 7, maximum: 99 }]),
   );
-  const weaponSuggestion = {
+  const weaponSuggestion = (allowedIds: string[]) => ({
     type: "object",
     properties: {
-      id: { type: "string", enum: validIds },
+      id: { type: "string", enum: allowedIds },
       rationale: { type: "string", minLength: 10 },
     },
     required: ["id", "rationale"],
     additionalProperties: false,
-  };
+  });
   return {
     type: "object",
     properties: {
@@ -124,9 +131,9 @@ export function buildResponseJsonSchema(game: Game): Record<string, unknown> {
       weapons: {
         type: "object",
         properties: {
-          early: weaponSuggestion,
-          mid: weaponSuggestion,
-          late: weaponSuggestion,
+          early: weaponSuggestion(earlyIds),
+          mid: weaponSuggestion(midIds),
+          late: weaponSuggestion(lateIds),
         },
         required: ["early", "mid", "late"],
         additionalProperties: false,
