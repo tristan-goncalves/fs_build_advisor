@@ -1,0 +1,43 @@
+body {
+  display: flex;
+  justify-content: center;
+}
+
+#root {
+  width: 100%;
+  max-width: 640px;
+  padding: 32px 28px;
+}
+
+.options-section {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  margin-top: 18px;
+}
+
+.options-row {
+  display: flex;
+  gap: 8px;
+  align-items: stretch;
+}
+
+.options-row .field-control {
+  flex: 1;
+}
+
+.help-text {
+  font-size: 12px;
+  color: var(--text-dim);
+  margin: 0;
+}
+
+.feedback-ok {
+  color: var(--early);
+  font-size: 12px;
+}
+
+.feedback-err {
+  color: var(--danger);
+  font-size: 12px;
+}

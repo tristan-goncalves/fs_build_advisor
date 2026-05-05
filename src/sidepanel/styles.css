@@ -1,0 +1,449 @@
+:root {
+  --bg-0: #0c0a08;
+  --bg-1: #14110d;
+  --bg-2: #1c1813;
+  --border: rgba(200, 162, 90, 0.22);
+  --border-strong: rgba(200, 162, 90, 0.5);
+  --gold: #d4af6a;
+  --gold-dim: #a87d3d;
+  --text: #e8e1cd;
+  --text-dim: #a39d8a;
+  --danger: #c87a6a;
+  --early: #6ea58e;
+  --mid: #c0a062;
+  --late: #b06868;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  margin: 0;
+  padding: 0;
+  background: var(--bg-0);
+  color: var(--text);
+  font-family: "Cinzel", "EB Garamond", ui-serif, Georgia, serif;
+  font-size: 14px;
+  line-height: 1.5;
+  min-height: 100vh;
+}
+
+#root {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+button,
+input,
+select,
+textarea {
+  font: inherit;
+  color: inherit;
+}
+
+textarea {
+  resize: vertical;
+}
+
+a {
+  color: var(--gold);
+}
+
+/* === Header === */
+.app-header {
+  padding: 16px 18px 12px;
+  border-bottom: 1px solid var(--border);
+  background: linear-gradient(180deg, var(--bg-1) 0%, var(--bg-0) 100%);
+}
+
+.app-title {
+  font-family: "Cinzel", ui-serif, serif;
+  font-size: 18px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--gold);
+  margin: 0 0 2px 0;
+  font-weight: 600;
+}
+
+.app-subtitle {
+  font-size: 12px;
+  color: var(--text-dim);
+  margin: 0;
+  letter-spacing: 0.02em;
+}
+
+.app-body {
+  flex: 1;
+  padding: 16px 18px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+/* === Status bar (Ollama) === */
+.status-bar {
+  font-size: 12px;
+  padding: 8px 10px;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--bg-1);
+  color: var(--text-dim);
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+}
+
+.status-bar.is-ok {
+  border-color: rgba(110, 165, 142, 0.45);
+  color: var(--text);
+}
+
+.status-bar.is-error {
+  border-color: rgba(200, 122, 106, 0.5);
+  color: var(--danger);
+}
+
+.status-bar a {
+  color: inherit;
+  text-decoration: underline;
+}
+
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--gold-dim);
+  flex-shrink: 0;
+}
+
+.status-bar.is-ok .status-dot {
+  background: var(--early);
+}
+
+.status-bar.is-error .status-dot {
+  background: var(--danger);
+}
+
+/* === Game selector === */
+.field-row {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+label.field-label {
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-dim);
+}
+
+select.field-control,
+textarea.field-control,
+input.field-control {
+  background: var(--bg-1);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 9px 11px;
+  color: var(--text);
+  outline: none;
+  transition:
+    border-color 0.15s ease,
+    background 0.15s ease;
+}
+
+select.field-control:focus,
+textarea.field-control:focus,
+input.field-control:focus {
+  border-color: var(--gold-dim);
+  background: var(--bg-2);
+}
+
+textarea.field-control {
+  min-height: 90px;
+}
+
+/* === Submit button === */
+.btn-primary {
+  background: linear-gradient(180deg, #2a2218 0%, #1a1510 100%);
+  color: var(--gold);
+  border: 1px solid var(--border-strong);
+  border-radius: 6px;
+  padding: 10px 14px;
+  font-family: "Cinzel", ui-serif, serif;
+  font-size: 13px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  cursor: pointer;
+  transition:
+    background 0.15s ease,
+    color 0.15s ease,
+    border-color 0.15s ease;
+}
+
+.btn-primary:hover:not(:disabled) {
+  background: linear-gradient(180deg, #3a2e1f 0%, #261d12 100%);
+  color: #f1d68f;
+}
+
+.btn-primary:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.btn-secondary {
+  background: transparent;
+  color: var(--text-dim);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 7px 10px;
+  font-size: 12px;
+  cursor: pointer;
+  transition: color 0.15s ease;
+}
+
+.btn-secondary:hover {
+  color: var(--gold);
+}
+
+/* === Result block === */
+.result {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  padding-top: 6px;
+}
+
+.result-summary {
+  font-size: 14px;
+  color: var(--text);
+  line-height: 1.55;
+  padding: 12px 14px;
+  background: var(--bg-1);
+  border: 1px solid var(--border);
+  border-left: 3px solid var(--gold);
+  border-radius: 4px;
+}
+
+.result-section-title {
+  font-family: "Cinzel", ui-serif, serif;
+  font-size: 12px;
+  letter-spacing: 0.18em;
+  text-transform: uppercase;
+  color: var(--gold-dim);
+  margin: 4px 0 6px 0;
+  border-bottom: 1px dashed var(--border);
+  padding-bottom: 6px;
+}
+
+.target-level {
+  font-size: 13px;
+  color: var(--text-dim);
+}
+
+.target-level strong {
+  color: var(--gold);
+  font-weight: 700;
+  letter-spacing: 0.05em;
+}
+
+/* === Weapon card === */
+.weapon-card {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  padding: 12px 14px;
+  background: var(--bg-1);
+  border: 1px solid var(--border);
+  border-radius: 6px;
+}
+
+.weapon-card-header {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+.weapon-name {
+  font-family: "Cinzel", ui-serif, serif;
+  font-size: 15px;
+  color: var(--gold);
+  margin: 0;
+  font-weight: 600;
+}
+
+.weapon-category {
+  font-size: 11px;
+  color: var(--text-dim);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.tier-badges {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+}
+
+.tier-badge {
+  font-size: 10px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  padding: 2px 7px;
+  border-radius: 3px;
+  border: 1px solid currentColor;
+  font-weight: 600;
+}
+
+.tier-badge[data-tier="early"] {
+  color: var(--early);
+}
+
+.tier-badge[data-tier="mid"] {
+  color: var(--mid);
+}
+
+.tier-badge[data-tier="late"] {
+  color: var(--late);
+}
+
+.weapon-stats-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 6px 12px;
+  font-size: 12px;
+}
+
+.weapon-stats-grid dt {
+  color: var(--text-dim);
+  font-size: 10px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  margin: 0;
+}
+
+.weapon-stats-grid dd {
+  margin: 0 0 4px 0;
+  color: var(--text);
+}
+
+.weapon-rationale {
+  font-size: 12.5px;
+  color: var(--text-dim);
+  margin: 0;
+  font-style: italic;
+  line-height: 1.5;
+  padding: 8px 10px;
+  background: var(--bg-2);
+  border-radius: 4px;
+  border-left: 2px solid var(--gold-dim);
+}
+
+.weapon-rationale strong {
+  color: var(--gold);
+  font-style: normal;
+  font-weight: 600;
+}
+
+.weapon-rationale-block {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.weapon-location {
+  font-size: 11px;
+  color: var(--text-dim);
+  margin: 0;
+  letter-spacing: 0.02em;
+}
+
+.weapon-location::before {
+  content: "📍 ";
+}
+
+.weapon-notes {
+  font-size: 12px;
+  color: var(--text-dim);
+  margin: 4px 0 0 0;
+  line-height: 1.45;
+}
+
+/* === Loading / error states === */
+.loading {
+  text-align: center;
+  padding: 20px 10px;
+  color: var(--text-dim);
+  font-size: 13px;
+  letter-spacing: 0.04em;
+}
+
+.loading::after {
+  content: "▪";
+  display: inline-block;
+  margin-left: 6px;
+  animation: pulse 1.2s infinite;
+  color: var(--gold);
+}
+
+@keyframes pulse {
+  0%,
+  100% {
+    opacity: 0.3;
+  }
+  50% {
+    opacity: 1;
+  }
+}
+
+.error-block {
+  background: rgba(200, 122, 106, 0.08);
+  border: 1px solid rgba(200, 122, 106, 0.4);
+  border-radius: 6px;
+  padding: 12px 14px;
+  color: var(--danger);
+  font-size: 13px;
+}
+
+.error-block pre {
+  margin: 8px 0 0 0;
+  padding: 8px;
+  background: var(--bg-0);
+  border-radius: 4px;
+  color: var(--text-dim);
+  font-size: 11px;
+  white-space: pre-wrap;
+  word-break: break-word;
+}
+
+/* === Footer === */
+.app-footer {
+  padding: 8px 18px 14px;
+  border-top: 1px solid var(--border);
+  font-size: 11px;
+  color: var(--text-dim);
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.app-footer button {
+  background: none;
+  border: none;
+  color: var(--text-dim);
+  cursor: pointer;
+  font-size: 11px;
+  text-decoration: underline;
+}
+
+.app-footer button:hover {
+  color: var(--gold);
+}
